@@ -1,0 +1,1 @@
+// export all react components from a single entrypoint file
