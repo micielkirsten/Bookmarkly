@@ -1,13 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { RootLayout, Logistics, Folders, Bookmarks, Bookmark_Content } from "@/components";
+import { RootLayout, Logistics, LogisticsRow, Folders, Bookmarks, Bookmark_Content } from "@/components";
 
-function App() {
+
+const App = () => {
   return(
-    <RootLayout>
-      <Logistics className="p-2 border-4 border-yellow-500"> Logistics </Logistics>
-      <Folders className="p-2 border-4 border-red-500"> Folders </Folders>
-      <Bookmarks className="p-2 border-4 border-green-500"> Bookmarks </Bookmarks>
-      <Bookmark_Content className="border-4 border-blue-500"> Bookmark Content </Bookmark_Content>
+    <RootLayout className="text-[rgba(204,204,204,255)]">
+      <Logistics className="p-2 bg-[rgba(24,24,24,255)] border-b-2 border-b-[rgba(43,43,43,255)]">
+        <LogisticsRow className="flex justify-between mt-1"></LogisticsRow>
+      </Logistics>
+      <Folders className="p-2 bg-[rgba(24,24,24,255)]"> Folders </Folders>
+      <Bookmarks className="hidden p-2"> Bookmarks </Bookmarks>
+      <Bookmark_Content className="p-2 bg-[rgba(31,31,31,255)] border-l-2 border-l-[rgba(43,43,43,255)]"> Bookmark Content </Bookmark_Content>
     </RootLayout>
   )
 }
