@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 
-const NewBookmarkForm = ({ isOpen, onClose, onSubmit }) => {
+interface NewBookmarkFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (bookmarkData: { title: string; tags: string; url: string; notes: string }) => void;
+}
+
+const NewBookmarkForm: React.FC<NewBookmarkFormProps> = ({ isOpen, onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
   const [url, setUrl] = useState('');
   const [notes, setNotes] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({ title, tags, url, notes });
     setTitle('');
@@ -28,6 +34,7 @@ const NewBookmarkForm = ({ isOpen, onClose, onSubmit }) => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Title"
+              required
               className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] col-span-1 p-2 rounded"
             />
             <input
@@ -42,6 +49,7 @@ const NewBookmarkForm = ({ isOpen, onClose, onSubmit }) => {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="URL"
+              required
               className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] col-span-1 p-2 rounded"
             />
           </div>
@@ -50,12 +58,12 @@ const NewBookmarkForm = ({ isOpen, onClose, onSubmit }) => {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes"
-              className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] w-full p-2 border rounded h-32"
+              className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] w-full p-2 rounded h-32"
             />
             <button
               type="button"
               onClick={() => setNotes('')}
-              className="absolute top-2 right-2 bg-[rgba(184,76,75,255)] px-2 py-1 rounded"
+              className="absolute top-2 right-2 bg-[rgba(184,76,75,255)] px-2 py-1 rounded text-white"
             >
               Delete
             </button>

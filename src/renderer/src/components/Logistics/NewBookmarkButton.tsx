@@ -3,7 +3,11 @@ import { ActionButton, ActionButtonProps } from '@/components';
 import { LuFileSignature } from 'react-icons/lu';
 import NewBookmarkForm from './NewBookmarkForm';
 
-export const NewBookmarkButton = ({...props}: ActionButtonProps) => {
+interface NewBookmarkButtonProps extends ActionButtonProps {
+  onAddBookmark: (bookmarkData: { title: string; tags: string; url: string; notes: string }) => void;
+}
+
+export const NewBookmarkButton: React.FC<NewBookmarkButtonProps> = ({ onAddBookmark, ...props }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const handleButtonClick = () => {
@@ -14,9 +18,9 @@ export const NewBookmarkButton = ({...props}: ActionButtonProps) => {
     setIsFormOpen(false);
   };
 
-  const handleFormSubmit = (bookmarkData) => {
-    //storing for handle submit for later 
-    console.log('New bookmark:', bookmarkData);
+  const handleFormSubmit = (bookmarkData: { title: string; tags: string; url: string; notes: string }) => {
+    onAddBookmark(bookmarkData);
+    setIsFormOpen(false);
   };
 
   return (

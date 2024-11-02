@@ -1,14 +1,8 @@
-import { contextBridge } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+// src/main/preload/index.ts
+import { contextBridge, ipcRenderer } from 'electron';
 
-if (!process.contextIsolated) {
-  throw new Error('contextIsolation must be enabled in the BrowserWindow')
-}
-
-try {
-  contextBridge.exposeInMainWorld('context', {
-    //TODO
-  })
-} catch (error) {
-  console.error(error)
-}
+contextBridge.exposeInMainWorld('api', {
+  fetchAllBookmarks: () => ipcRenderer.invoke('bookmark:fetchAll'),
+  createBookmark: (bookmarkData) => ipcRenderer.invoke('bookmark:create', bookmarkData),
+  deleteBookmark: (id) => ipcRenderer.invoke('bookmark:delete', id),
+});
