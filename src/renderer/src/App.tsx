@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { RootLayout, Logistics, LogisticsRow, Folders, Bookmarks, Bookmark_Content } from "@/components";
+import { RootLayout, Logistics, LogisticsRow, Folders, Bookmarks, Bookmark_Content, BookmarkList } from "@/components";
 
 interface Bookmark {
   _id?: string;
@@ -16,7 +16,9 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchBookmarks = async () => {
       const bookmarksFromDB = await window.api.fetchAllBookmarks();
-      setBookmarks(bookmarksFromDB);
+      const formattedBookmarks: Bookmark[] = bookmarksFromDB.map((bookmark) => bookmark._doc); // This might still have the _doc wrapper      
+      console.log(formattedBookmarks); // Log the fetched bookmarks
+      setBookmarks(formattedBookmarks);
     };
     fetchBookmarks();
   }, []);
@@ -42,7 +44,7 @@ const App: React.FC = () => {
         <Folders className="p-2 bg-[rgba(24,24,24,255)] w-[150px]">Folders</Folders>
         <Bookmarks className="hidden p-2">Bookmarks</Bookmarks>
         <Bookmark_Content className="flex-grow p-2 bg-[rgba(31,31,31,255)] border-l-2 border-l-[rgba(43,43,43,255)]">
-          Bookmark Content
+          <BookmarkList bookmarks={bookmarks} onDelete={handleDeleteBookmark} />
         </Bookmark_Content>
       </div>
     </RootLayout>

@@ -13,8 +13,12 @@ declare global {
 }
 
 interface BookmarkData {
-  title: string;
-  tags: string;
-  url: string;
-  notes: string;
+  _doc: {
+    title: string;
+    tags: string;
+    url: string;
+    notes: string;
+    createdAt: Date; // Adjust based on how you're storing this
+    _id: string; // Ensure _id is a string for ease of use
+  };
 }

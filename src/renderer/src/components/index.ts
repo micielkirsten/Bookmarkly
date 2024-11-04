@@ -2,3 +2,4 @@
 export * from "./AppLayout";
 export * from "./Logistics";
 export * from "./LogisticsRow"; 
+export * from "./Content";

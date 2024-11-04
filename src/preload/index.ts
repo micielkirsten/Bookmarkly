@@ -6,3 +6,4 @@ contextBridge.exposeInMainWorld('api', {
   createBookmark: (bookmarkData) => ipcRenderer.invoke('bookmark:create', bookmarkData),
   deleteBookmark: (id) => ipcRenderer.invoke('bookmark:delete', id),
 });
+
