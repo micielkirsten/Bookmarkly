@@ -1,24 +1,41 @@
 import React, { useState } from 'react';
 
 interface NewBookmarkFormProps {
+  // Controls whether the form is open or not
   isOpen: boolean;
+  
+  // Function to close the form
   onClose: () => void;
+  
+  // Function to handle form submission and pass bookmark data to parent component (App.tsx)
   onSubmit: (bookmarkData: { title: string; tags: string; url: string; notes: string }) => void;
 }
 
+// Component for the form that collects data to create a new bookmark.
 const NewBookmarkForm: React.FC<NewBookmarkFormProps> = ({ isOpen, onClose, onSubmit }) => {
+  // State variables to store the input values for the bookmark data (title, tags, URL, notes).
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
   const [url, setUrl] = useState('');
   const [notes, setNotes] = useState('');
 
+
+  // Handle form submission.
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Pass the collected bookmark data (title, tags, URL, notes) to the onSubmit function.
+    // The onSubmit function is provided by the parent component (NewBookmarkButton),
+    // which will then handle sending this data to the main process for saving to the database.
     onSubmit({ title, tags, url, notes });
+
+    // Clear the form fields after submission.
     setTitle('');
     setTags('');
     setUrl('');
     setNotes('');
+
+    // Close the form after submission.
     onClose();
   };
 

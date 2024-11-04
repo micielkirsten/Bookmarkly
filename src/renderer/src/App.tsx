@@ -10,26 +10,36 @@ interface Bookmark {
 }
 
 const App: React.FC = () => {
+  // State to store the list of bookmarks fetched from the database
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
 
   // Fetch bookmarks from the database on load
   useEffect(() => {
     const fetchBookmarks = async () => {
+
+      // Fetch all bookmarks from the main process through the API exposed in the preload script
       const bookmarksFromDB = await window.api.fetchAllBookmarks();
+      // Update the state with the fetched bookmarks
       setBookmarks(bookmarksFromDB);
     };
-    fetchBookmarks();
-  }, []);
+    fetchBookmarks(); // Call the function to fetch bookmarks
+  }, []); // Empty dependency array to ensure this only runs once on component mount
 
   // Add a new bookmark
   const handleAddBookmark = async (newBookmark: Bookmark) => {
+
+    // Send the new bookmark data to the main process to be saved in the database
     const savedBookmark = await window.api.createBookmark(newBookmark);
+    // Update the state by adding the newly saved bookmark to the existing list
     setBookmarks((prevBookmarks) => [...prevBookmarks, savedBookmark]);
   };
 
   // Delete a bookmark
   const handleDeleteBookmark = async (id: string) => {
+
+    // Send the bookmark ID to the main process to delete the corresponding bookmark in the database
     await window.api.deleteBookmark(id);
+    // Update the state to remove the deleted bookmark from the list
     setBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => bookmark._id !== id));
   };
 
