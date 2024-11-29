@@ -4,11 +4,17 @@ import { LuFileSignature } from 'react-icons/lu';
 import NewBookmarkForm from './NewBookmarkForm';
 
 interface NewBookmarkButtonProps extends ActionButtonProps {
-  onAddBookmark: (bookmarkData: { title: string; tags: string; url: string; notes: string }) => void;
+  onAddBookmark: (bookmarkData: {
+    title: string;
+    tags: string;
+    url: string;
+    notes: string;
+  }) => Promise<void> | void;
 }
 
 export const NewBookmarkButton: React.FC<NewBookmarkButtonProps> = ({ onAddBookmark, ...props }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleButtonClick = () => {
     setIsFormOpen(true);
@@ -18,9 +24,28 @@ export const NewBookmarkButton: React.FC<NewBookmarkButtonProps> = ({ onAddBookm
     setIsFormOpen(false);
   };
 
-  const handleFormSubmit = (bookmarkData: { title: string; tags: string; url: string; notes: string }) => {
-    onAddBookmark(bookmarkData);
-    setIsFormOpen(false);
+  const handleFormSubmit = async (bookmarkData: {
+    title: string;
+    tags: string;
+    url: string;
+    notes: string;
+  }) => {
+    try {
+      setIsSubmitting(true);
+      const cleanBookmarkData = {
+        title: bookmarkData.title.trim(),
+        tags: bookmarkData.tags.trim(),
+        url: bookmarkData.url.trim(),
+        notes: bookmarkData.notes.trim()
+      };
+      
+      await onAddBookmark(cleanBookmarkData);
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error('Error adding bookmark:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

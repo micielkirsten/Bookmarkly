@@ -1,38 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { RootLayout, Logistics, LogisticsRow, Folders, Bookmarks, Bookmark_Content, BookmarkList } from "@/components";
-
-interface Bookmark {
-  _id?: string;
-  title: string;
-  tags: string;
-  url: string;
-  notes: string;
-}
 
 const App: React.FC = () => {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
 
-  // Fetch bookmarks from the database on load
-  useEffect(() => {
-    const fetchBookmarks = async () => {
-      const bookmarksFromDB = await window.api.fetchAllBookmarks();
-      const formattedBookmarks: Bookmark[] = bookmarksFromDB.map((bookmark) => bookmark._doc); // This might still have the _doc wrapper      
-      console.log(formattedBookmarks); // Log the fetched bookmarks
-      setBookmarks(formattedBookmarks);
-    };
-    fetchBookmarks();
+  const refreshBookmarks = useCallback(async () => {
+    console.log('Refreshing bookmarks...');
+    const bookmarksFromDB = await window.api.fetchAllBookmarks();
+    const formattedBookmarks: Bookmark[] = bookmarksFromDB.map((bookmark) => bookmark._doc || bookmark);
+    console.log('Updated bookmarks:', formattedBookmarks);
+    setBookmarks(formattedBookmarks);
   }, []);
 
-  // Add a new bookmark
+  useEffect(() => {
+    refreshBookmarks();
+
+    return () => {
+    };
+  }, [refreshBookmarks]);
+
   const handleAddBookmark = async (newBookmark: Bookmark) => {
-    const savedBookmark = await window.api.createBookmark(newBookmark);
-    setBookmarks((prevBookmarks) => [...prevBookmarks, savedBookmark]);
+    try {
+      const result = await window.api.createBookmark({
+        ...newBookmark,
+        _doc: {
+          title: newBookmark.title,
+          tags: newBookmark.tags,
+          url: newBookmark.url,
+          notes: newBookmark.notes,
+          createdAt: new Date(),
+          _id: ""
+        }
+      });
+      if (!result) {
+        console.error('Failed to create bookmark');
+        return;
+      }
+      await refreshBookmarks();
+    } catch (error) {
+      console.error('Error creating bookmark:', error);
+    }
   };
 
-  // Delete a bookmark
   const handleDeleteBookmark = async (id: string) => {
-    await window.api.deleteBookmark(id);
-    setBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => bookmark._id !== id));
+    try {
+      console.log('Attempting to delete bookmark:', id);
+      const result = await window.api.deleteBookmark(id);
+      
+      await refreshBookmarks();
+    } catch (error) {
+      console.error('Error deleting bookmark:', error);
+    }
   };
 
   return (

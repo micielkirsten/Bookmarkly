@@ -1,12 +1,14 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
-import { electronApp, optimizer, is } from '@electron-toolkit/utils';
+import { is } from '@electron-toolkit/utils';
 import connectDB from './database';
 import Bookmark from './models/Bookmark';
 import icon from '../../resources/icon.png?asset';
 
+let mainWindow;
+
 const createWindow = (): void => {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -57,19 +59,31 @@ app.on('window-all-closed', () => {
 
 // IPC Handlers for CRUD Operations
 
-// Create a new bookmark
+//Create
 ipcMain.handle('bookmark:create', async (_event, bookmarkData) => {
   try {
-    const newBookmark = new Bookmark(bookmarkData);
-    await newBookmark.save();
-    return newBookmark;
+    console.log('Attempting to create bookmark with data:', bookmarkData);
+
+    const newBookmark = new Bookmark({
+      title: bookmarkData.title || '',
+      tags: bookmarkData.tags || '',
+      url: bookmarkData.url || '',
+      notes: bookmarkData.notes || ''
+    });
+
+    const savedBookmark = await newBookmark.save();
+    const serializedBookmark = savedBookmark.toObject();
+    serializedBookmark._id = serializedBookmark._id.toString();
+    mainWindow.webContents.send('bookmark:created', serializedBookmark);
+    
+    return serializedBookmark;
   } catch (error) {
     console.error('Error creating bookmark:', error);
     throw error;
   }
 });
 
-// Get all bookmarks
+//Fetch 
 ipcMain.handle('bookmark:fetchAll', async () => {
   try {
     const bookmarks = await Bookmark.find();
@@ -80,13 +94,38 @@ ipcMain.handle('bookmark:fetchAll', async () => {
   }
 });
 
-// Delete a bookmark by ID
+//Delete
 ipcMain.handle('bookmark:delete', async (_event, bookmarkId) => {
   try {
-    await Bookmark.findByIdAndDelete(bookmarkId);
-    return { success: true };
+
+    let id;
+    if (bookmarkId && bookmarkId.buffer && bookmarkId.buffer instanceof Uint8Array) {
+      const buffer = Buffer.from(bookmarkId.buffer);
+      id = buffer.toString('hex');
+    } else if (bookmarkId && bookmarkId instanceof Uint8Array) {
+      id = Buffer.from(bookmarkId).toString('hex');
+    } else {
+      id = bookmarkId;
+    }
+    
+    const ObjectId = require('mongoose').Types.ObjectId;
+    const mongoId = new ObjectId(id);
+
+    const result = await Bookmark.findByIdAndDelete(mongoId);
+    
+    if (result) {
+      const stringId = result._id.toString();
+      BrowserWindow.getAllWindows().forEach(window => {
+        window.webContents.send('bookmark:deleted', stringId);
+      });
+      
+      return { success: true, id: stringId };
+    } else {
+      console.log('Bookmark not found:', id);
+      return { success: false, error: 'Bookmark not found' };
+    }
   } catch (error) {
-    console.error('Error deleting bookmark:', error);
+    console.error('Error in delete handler:', error);
     throw error;
   }
 });
