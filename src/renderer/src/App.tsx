@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { RootLayout, Logistics, LogisticsRow, Folders, Bookmark_Content, BookmarkList, TagFolders } from "@/components";
+import { RootLayout, Logistics, LogisticsRow, Folders, Bookmark_Content, BookmarkList, TagFolders, LoginPage } from "@/components";
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -17,6 +18,10 @@ const App: React.FC = () => {
   useEffect(() => {
     refreshBookmarks();
   }, [refreshBookmarks]);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
 
   const handleAddBookmark = async (newBookmark: Bookmark) => {
     try {
@@ -80,7 +85,7 @@ const App: React.FC = () => {
     return filtered;
   }, [bookmarks, selectedTag, searchQuery]);
 
-  return (
+  return isAuthenticated ? (
     <RootLayout className="text-[rgba(204,204,204,255)] flex">
       <Logistics className="p-2 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 border-b-2 border-b-gray-600 w-full">
         <LogisticsRow className="flex space-x-2 mt-1" onAddBookmark={handleAddBookmark} onSearch={setSearchQuery} />
@@ -102,6 +107,8 @@ const App: React.FC = () => {
         </Bookmark_Content>
       </div>
     </RootLayout>
+  ) : (
+    <LoginPage onLogin={handleLogin} />
   );
 };
 
