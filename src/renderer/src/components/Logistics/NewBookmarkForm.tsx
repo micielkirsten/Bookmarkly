@@ -25,9 +25,9 @@ const NewBookmarkForm: React.FC<NewBookmarkFormProps> = ({ isOpen, onClose, onSu
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-[rgba(31,31,31,255)] p-6 border-2 border-[rgba(43,43,43,255)] rounded-lg w-full max-w-2xl">
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="fixed inset-0 bg-blue-200 bg-opacity-70 flex items-center justify-center">
+      <div className="bg-white p-8 border-2 border-blue-300 rounded-lg w-full max-w-2xl shadow-lg">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-3 gap-4">
             <input
               type="text"
@@ -35,14 +35,14 @@ const NewBookmarkForm: React.FC<NewBookmarkFormProps> = ({ isOpen, onClose, onSu
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Title"
               required
-              className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] col-span-1 p-2 rounded"
+              className="bg-blue-50 border border-blue-300 col-span-1 p-3 rounded focus:outline-none focus:ring focus:ring-blue-400 placeholder-gray-500 text-gray-800"
             />
             <input
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="Tags"
-              className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] col-span-1 p-2 rounded"
+              className="bg-blue-50 border border-blue-300 col-span-1 p-3 rounded focus:outline-none focus:ring focus:ring-blue-400 placeholder-gray-500 text-gray-800"
             />
             <input
               type="url"
@@ -50,7 +50,7 @@ const NewBookmarkForm: React.FC<NewBookmarkFormProps> = ({ isOpen, onClose, onSu
               onChange={(e) => setUrl(e.target.value)}
               placeholder="URL"
               required
-              className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] col-span-1 p-2 rounded"
+              className="bg-blue-50 border border-blue-300 col-span-1 p-3 rounded focus:outline-none focus:ring focus:ring-blue-400 placeholder-gray-500 text-gray-800"
             />
           </div>
           <div className="relative">
@@ -58,45 +58,39 @@ const NewBookmarkForm: React.FC<NewBookmarkFormProps> = ({ isOpen, onClose, onSu
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes"
-              className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] w-full p-2 rounded h-32"
+              className="bg-blue-50 border border-blue-300 w-full p-3 rounded h-36 focus:outline-none focus:ring focus:ring-blue-400 placeholder-gray-500 text-gray-800"
             />
             <button
               type="button"
               onClick={() => setNotes('')}
-              className="absolute top-2 right-2 bg-[rgba(184,76,75,255)] px-2 py-1 rounded text-white"
+              className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
             >
               Delete
             </button>
-            <button
-              type="button"
-              className="absolute bottom-4 right-2 bg-gray-200 text-black px-2 py-1 rounded"
-            >
-              +
-            </button>
           </div>
-          <div className="flex justify-between">
+          <div className="grid grid-cols-3 gap-4">
             <input
               type="text"
               placeholder="Export from browser/clipboard"
-              className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] w-2/3 p-2 border rounded"
+              className="bg-blue-50 border border-blue-300 col-span-2 p-3 rounded focus:outline-none focus:ring focus:ring-blue-400 placeholder-gray-500 text-gray-800"
             />
             <input
               type="number"
               placeholder="Paragraph #"
-              className="bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] w-1/4 p-2 border rounded"
+              className="bg-blue-50 border border-blue-300 col-span-1 p-3 rounded focus:outline-none focus:ring focus:ring-blue-400 placeholder-gray-500 text-gray-800"
             />
           </div>
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-[rgba(87,89,93,255)] rounded"
+              className="px-5 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition focus:outline-none focus:ring focus:ring-blue-400"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded"
+              className="px-5 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition focus:outline-none focus:ring focus:ring-blue-400"
             >
               Save Bookmark
             </button>

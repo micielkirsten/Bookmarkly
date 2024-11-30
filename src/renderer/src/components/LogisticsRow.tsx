@@ -12,9 +12,16 @@ export const LogisticsRow: React.FC<LogisticsRowProps> = ({ onAddBookmark, onSea
   };
 
   return (
-    <div {...props}>
-      <SearchInput onChange={handleSearchChange} placeholder="Search bookmarks..." />
-      <NewBookmarkButton onAddBookmark={onAddBookmark} />
+    <div {...props} className="flex items-center gap-4">
+      <SearchInput 
+        onChange={handleSearchChange} 
+        placeholder="Search bookmarks..." 
+        className="w-1/3 px-2 py-1 rounded-md border-2 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-100"
+      />
+      <NewBookmarkButton 
+        onAddBookmark={onAddBookmark} 
+        className="ml-auto px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition text-sm"
+      />
     </div>
   );
 };

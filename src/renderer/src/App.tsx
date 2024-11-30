@@ -86,21 +86,21 @@ const App: React.FC = () => {
   }, [bookmarks, selectedTag, searchQuery]);
 
   return isAuthenticated ? (
-    <RootLayout className="text-[rgba(204,204,204,255)] flex">
-      <Logistics className="p-2 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 border-b-2 border-b-gray-600 w-full">
+    <RootLayout className="text-blue-900 flex">
+      <Logistics className="p-2 bg-gradient-to-r from-blue-400 via-blue-300 to-blue-400 border-b-2 border-b-blue-500 w-full shadow-md">
         <LogisticsRow className="flex space-x-2 mt-1" onAddBookmark={handleAddBookmark} onSearch={setSearchQuery} />
       </Logistics>
       <div className="flex flex-row w-full h-full">
-        <Folders className="p-2 bg-gradient-to-b from-gray-900 to-gray-700 w-[200px]">
-          <h2 className="text-lg font-semibold text-white mb-4">Folders</h2>
+        <Folders className="p-2 bg-gradient-to-b from-blue-50 to-white w-[200px] border-r border-r-blue-200 shadow-inner">
+          <h2 className="text-lg font-semibold text-blue-700 mb-4">Folders</h2>
           <TagFolders 
             bookmarks={bookmarks} 
             onSelectTag={setSelectedTag} 
           />
         </Folders>
-        <Bookmark_Content className="flex-grow p-4 bg-gradient-to-b from-gray-800 to-gray-600 border-l-2 border-l-gray-600">
+        <Bookmark_Content className="flex-grow p-4 bg-gradient-to-b from-gray-50 to-white border-l-2 border-l-blue-300 shadow-md">
           {filteredBookmarks().length === 0 ? (
-            <p className="text-gray-400 text-center mt-4">No bookmarks to display</p>
+            <p className="text-gray-500 text-center mt-4">No bookmarks to display</p>
           ) : (
             <BookmarkList bookmarks={filteredBookmarks()} onDelete={handleDeleteBookmark} />
           )}

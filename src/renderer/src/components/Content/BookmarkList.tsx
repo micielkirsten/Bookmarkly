@@ -41,37 +41,37 @@ const BookmarkList: React.FC<BookmarkListProps> = ({ bookmarks, onDelete }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
       {bookmarks.map((bookmark) => {
         const bookmarkData: BookmarkDoc | Bookmark = bookmark._doc || bookmark;
         const id = String(bookmarkData._id);
         const citation = generateCitation(bookmarkData);
         
         return (
-          <div key={id} className="border-2 border-[rgba(43,43,43,255)] bg-[rgba(31,31,31,255)] p-4 rounded-lg space-y-2">
-            <h3 className="font-bold text-lg">{bookmarkData.title}</h3>
-            <p className="text-sm">Tags: {bookmarkData.tags}</p>
-            <p className="text-sm break-all">URL: {bookmarkData.url}</p>
-            <p className="text-sm">Notes: {bookmarkData.notes}</p>
+          <div key={id} className="border border-blue-300 bg-white p-2 rounded-md space-y-1 shadow-sm hover:shadow-lg transition-shadow duration-300">
+            <h3 className="font-bold text-sm text-blue-800 truncate">{bookmarkData.title}</h3>
+            <p className="text-xs text-blue-700 truncate">Tags: {bookmarkData.tags}</p>
+            <p className="text-xs text-blue-600 break-all truncate">URL: {bookmarkData.url}</p>
+            <p className="text-xs text-blue-600 truncate">Notes: {bookmarkData.notes}</p>
             
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-1 pt-1">
               <button 
                 onClick={() => handleDelete(bookmark)}
-                className="px-4 py-2 bg-[rgba(184,76,75,255)] rounded"
+                className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-xs"
               >
                 Delete
               </button>
               
               <button
                 onClick={() => copyToClipboard(id, citation)}
-                className="px-4 py-2 bg-[rgba(87,89,93,255)] rounded flex items-center gap-2"
+                className="px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 transition text-xs flex items-center gap-1"
               >
                 Generate Citation
               </button>
             </div>
 
             {copiedId === id && (
-              <div className="mt-2 bg-[rgba(42,42,42,255)] border-2 border-[rgba(71,71,71,255)] p-2 rounded">
+              <div className="mt-1 bg-blue-100 border border-blue-300 p-1 rounded text-blue-800 text-xs">
                 Citation copied to clipboard!
               </div>
             )}
