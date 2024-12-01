@@ -3,6 +3,7 @@ import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
 import connectDB from './database';
 import Bookmark from './models/Bookmark';
+import User from './models/User';
 import icon from '../../resources/icon.png?asset';
 
 let mainWindow;
@@ -129,3 +130,25 @@ ipcMain.handle('bookmark:delete', async (_event, bookmarkId) => {
     throw error;
   }
 });
+
+// IPC handlers for account creation
+
+ipcMain.handle('create-account', async (event, { username, password }) => {
+  try {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return { success: false, message: 'Username already exists' };
+    }
+
+    const hashedPassword = password;
+
+    const newUser = new User({ username, password: hashedPassword });
+    await newUser.save();
+
+    return { success: true, message: 'Account created successfully!' };
+  } catch (error) {
+    console.error('Error creating user:', error);
+    return { success: false, message: 'An error occurred while creating the account' };
+  }
+});
+

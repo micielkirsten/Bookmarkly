@@ -23,5 +23,7 @@ contextBridge.exposeInMainWorld('api', {
   removeBookmarkListeners: () => {
     ipcRenderer.removeAllListeners('bookmark:created');
     ipcRenderer.removeAllListeners('bookmark:deleted');
-  }
+  },
+  createAccount: (username, password) =>
+    ipcRenderer.invoke('create-account', { username, password }),
 });
